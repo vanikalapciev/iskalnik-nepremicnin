@@ -9,8 +9,7 @@ import xlsxwriter
 PATH = "C:\chromedriver.exe"
 driver = webdriver.Chrome(PATH)
 
-link = "https://www.nepremicnine.net/oglasi-prodaja/juzna-primorska/piran/stanovanje/4-sobno/cena-do-450000-eur/"
-
+link = sys.argv[1]
 driver.get(link)
 
 time.sleep(5)
