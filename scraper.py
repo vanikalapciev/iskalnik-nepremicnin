@@ -1,19 +1,22 @@
 import time
 from selenium import webdriver
 from statistics import mean
+from selenium.webdriver.chrome.options import Options
 
 def parse_pages(url):
     PATH = "C:\chromedriver.exe"
-    driver = webdriver.Chrome(PATH)
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(PATH, chrome_options=options)
     
     driver.get(url)
     
-    time.sleep(3)
+    time.sleep(2)
     
     try:
         strani = driver.find_element_by_xpath("//*[@id='pagination']/ul").get_attribute("data-pages")
     except:
-        strani = 2
+        strani = 1
         
     print(int(strani))
 
@@ -27,11 +30,11 @@ def parse_pages(url):
     
     main_list =[]
     k=1
-    
-    for i in range(int(strani) - 1):
-        time.sleep(3)
+    j=1
+    for i in range(int(strani)):
+        time.sleep(2)
         podatki = driver.find_elements_by_class_name("oglas_container")
-        j=1
+        
         for podatek in podatki:
             title = podatek.find_element_by_class_name("title")
             agency = podatek.find_element_by_class_name("agencija")
@@ -52,9 +55,9 @@ def parse_pages(url):
                 value_list.append(str(value))
                 avg_list.append(value)
                 
-                print ("Add " + str(j) + "...Done")
+                print ("Ad " + str(j) + "...Done")
             except:
-                print ("Add " + str(j) + "...Failed")
+                print ("Ad " + str(j) + "...Failed")
             j +=1
         print("Page " + str(k) + "...DONE")
         k +=1

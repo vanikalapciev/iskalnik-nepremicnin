@@ -1,6 +1,7 @@
 import xlsxwriter
 
 def generate_xlsx(main_list):
+    print("Generating Excel")
     workbook = xlsxwriter.Workbook('export.xlsx')
     worksheet = workbook.add_worksheet()
     worksheet.write('A1', 'Title') 
@@ -19,3 +20,5 @@ def generate_xlsx(main_list):
         worksheet.write('F' + str(i+2), main_list[i]["Score"])
         worksheet.write('G' + str(i+2), main_list[i]["Link"])
     workbook.close()
+    
+    print("Excell Successfully generated")
