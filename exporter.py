@@ -14,8 +14,8 @@ def generate_xlsx(main_list):
     for i in range(len(main_list)):
         worksheet.write('A' + str(i+2), main_list[i]["Title"]) 
         worksheet.write('B' + str(i+2), main_list[i]["Agency"]) 
-        worksheet.write('C' + str(i+2), main_list[i]["Size"]) 
-        worksheet.write('D' + str(i+2), main_list[i]["Price"])
+        worksheet.write('C' + str(i+2), main_list[i]["Size"] + " m2") 
+        worksheet.write('D' + str(i+2), main_list[i]["Price"] + " €")
         worksheet.write('E' + str(i+2), main_list[i]["Value"] + " €/m2") 
         worksheet.write('F' + str(i+2), main_list[i]["Score"])
         worksheet.write('G' + str(i+2), main_list[i]["Link"])
