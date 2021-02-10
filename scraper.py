@@ -3,6 +3,7 @@ from selenium import webdriver
 from statistics import mean
 from selenium.webdriver.chrome.options import Options
 import regex
+from support import *
 
 def parse_pages_napremicnine(url):
     PATH = "C:\chromedriver.exe"
@@ -11,7 +12,8 @@ def parse_pages_napremicnine(url):
     driver = webdriver.Chrome(PATH, chrome_options=options)
     
     driver.get(url)
-    
+    print("Starting parsing for URL:")
+    print(url)
     time.sleep(2)
     
     try:
@@ -70,22 +72,10 @@ def parse_pages_napremicnine(url):
     
     lowest_price = min(avg_list)
     max_price = max(avg_list)
-    difference = max_price - lowest_price
-    increment = difference / 5
     
     for i in range(len(value_list)):
+        score = set_score(lowest_price, max_price, value_list[i])
 
-        if  lowest_price <= avg_list[i] < lowest_price + increment:
-            score = "VERY GOOD VALUE"
-        elif lowest_price + increment <= avg_list[i] < lowest_price + increment*2:
-            score = "GOOD VALUE"
-        elif lowest_price + increment*2 <= avg_list[i] < lowest_price + increment*3:
-            score = "NORMAL PRICE"
-        elif lowest_price + increment*3 <= avg_list[i] < lowest_price + increment*4:
-            score = "OVER PRICED"
-        elif lowest_price + increment*4 <= avg_list[i] <= lowest_price + increment*5:
-            score = "VERY OVER PRICED"
-    
         item = {
               "Title" : title_list[i],
               "Agency" : agency_list[i],
@@ -96,18 +86,19 @@ def parse_pages_napremicnine(url):
               "Score" : score,
               "Link" : link_list[i],   
             }
-
+        
         main_list.append(item)
     return main_list
 
 def pase_pages_bolha(url):
     PATH = "C:\chromedriver.exe"
     options = Options()
-    #options.headless = True
-    driver = webdriver.Chrome(PATH)
+    options.headless = True
+    driver = webdriver.Chrome(PATH, chrome_options=options)
     
     driver.get(url)
-    
+    print("Starting parsing for URL:")
+    print(url)
     time.sleep(2)
     
     title_list = []
@@ -182,31 +173,13 @@ def pase_pages_bolha(url):
             running = False
             
     driver.quit()
-    print (mean(avg_list))
     
     lowest_price = min(avg_list)
     max_price = max(avg_list)
-    difference = max_price - lowest_price
-    increment = difference / 5
-    
-    print(lowest_price)
-    print(max_price)
+   
     
     for i in range(len(value_list)):
-        try:
-            if  lowest_price <= float(value_list[i]) < lowest_price + increment:
-                score = "VERY GOOD VALUE"
-            elif lowest_price + increment <= float(value_list[i]) < lowest_price + increment*2:
-                score = "GOOD VALUE"
-            elif lowest_price + increment*2 <= float(value_list[i]) < lowest_price + increment*3:
-                score = "NORMAL PRICE"
-            elif lowest_price + increment*3 <= float(value_list[i]) < lowest_price + increment*4:
-                score = "OVER PRICED"
-            elif lowest_price + increment*4 <= float(value_list[i]) <= lowest_price + increment*5:
-                score = "VERY OVER PRICED"
-        except:
-            score = "NO SCORE"
-        print(score)
+        score = set_score(lowest_price, max_price, value_list[i])
         
         item = {
               "Title" : title_list[i],
@@ -216,8 +189,11 @@ def pase_pages_bolha(url):
               "Value" : value_list[i],
               "Avg" : str(mean(avg_list)),
               "Score" : score,
-              "Link" : link_list[i],   
+              "Link" : link_list[i],
+              "Timestamp": time.time(),
+              "Search": url
             }
-
+        
         main_list.append(item)
+    write_to_database(main_list)
     return main_list
